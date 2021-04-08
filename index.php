@@ -1,27 +1,3 @@
-<?php
-echo "<h1>Hello World</h1>";
-$ch = curl_init();
-//sset url
-curl_setopt($ch, CURLOPT_URL, "https://githubusercontent.com/xyefimenko/webTe/blob/master/index.php");
-//return the transfer as a string
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-//output contains the output string
-$output = curl_exec($ch);
-$output = mb_convert_encoding($output, 'UTF-8', "UTF-16LE");
-//close curl resource to free system res
-curl_close($ch);
-
-$lines = explode(PHP_EOL, $output);
-$csv = [];
-
-foreach ($lines as $line) {
-    $csv[] = str_getcsv($line, "\t");
-}
-
-echo bin2hex($output);
-?>
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -30,14 +6,33 @@ echo bin2hex($output);
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Zadanie 4</title>
+    <script>
+        function getUpdateDbResponse(){
+            fetch('updateDb.php')
+                .then(
+                    function(response) {
+                        if (response.status !== 200) {
+                            console.log('Looks like there was a problem. Status Code: ' +
+                                response.status);
+                            return;
+                        }
+
+                        // Examine the text in the response
+                        response.json().then(function(data) {
+                            console.log(data);
+                            alert(data.msg);
+                        });
+                    }
+                )
+                .catch(function(err) {
+                    console.log('Fetch Error :-S', err);
+                });
+        }
+    </script>
 </head>
 <body>
 
-<pre>
-    <?php
-        var_dump($csv);
-    ?>
-</pre>
+    <button onclick="getUpdateDbResponse()">Uppdate</button>
 
 </body>
 </html>
